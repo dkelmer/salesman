@@ -4,13 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+
 public class Route {
-	int id;
 	ArrayList<City> cities;
 	double totalDistance;
+	static boolean DEBUG = true;
 	
-	public Route() {
+	public Route(boolean DEBUG) {
 		this.cities = new ArrayList<City>();
+		Route.DEBUG = DEBUG;
+	}
+	
+	public Route(Route r) {
+		this.totalDistance = r.totalDistance;
+		this.cities = new ArrayList<City>();
+		for(City c : r.cities) {
+			this.cities.add(c.clone());
+		}
 	}
 	
 	public void addCity(City c) {
@@ -23,6 +33,7 @@ public class Route {
 			double dist = cities.get(i).getDistance(cities.get(i+1));
 			currLength += dist;
 			//System.out.printf("distance b/w city #%d and city #%d is: %f\n", (i+1), (i+2), dist);
+			//System.out.println("currlen = " + currLength);
 		}
 		this.totalDistance = currLength;
 		return currLength;
@@ -37,10 +48,14 @@ public class Route {
 	public void generateNeighbor() {
 		//in current implementation, swap two random cities
 		Random random = new Random();
-		int city1idx = random.nextInt(1000);
+		int city1idx = random.nextInt(cities.size());
 		int city2idx = city1idx;
 		while(city2idx == city1idx) {
-			city2idx = random.nextInt(1000);
+			city2idx = random.nextInt(cities.size());
+		}
+		
+		if(DEBUG) {
+			System.out.printf("Swapping: (idx1 = %d, idx2 = %d)\n", city1idx, city2idx);
 		}
 		
 		swapCities(city1idx, city2idx);
@@ -57,6 +72,14 @@ public class Route {
 	}
 	
 	public void printRoute() {
+		for(City c : cities) {
+			System.out.println(c);
+		}
+		System.out.println("total distance = " + totalDistance);
+		
+	}
+	
+	public void printSolution() {
 		for(City c : cities) {
 			System.out.println(c.getId());
 		}

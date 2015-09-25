@@ -2,15 +2,21 @@ package salesman;
 
 public class City implements Comparable{
 	int id;
-	int xcoord;
-	int ycoord;
-	int zcoord;
+	int x;
+	int y;
+	int z;
+	static boolean DEBUG; 
 	
-	public City(int id, int x, int y, int z) {
+	public City(int id, int x, int y, int z, boolean DEBUG) {
 		this.id = id;
-		this.xcoord = x;
-		this.ycoord = y;
-		this.zcoord = z;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		City.DEBUG = DEBUG;
+	}
+	
+	public City() {
+		this.id  = this.x = this.y = this.z = -1;
 	}
 
 	public int getId() {
@@ -22,43 +28,66 @@ public class City implements Comparable{
 	}
 
 	public int getXcoord() {
-		return xcoord;
+		return x;
 	}
 
 	public void setXcoord(int xcoord) {
-		this.xcoord = xcoord;
+		this.x = xcoord;
 	}
 
 	public int getYcoord() {
-		return ycoord;
+		return y;
 	}
 
 	public void setYcoord(int ycoord) {
-		this.ycoord = ycoord;
+		this.y = ycoord;
 	}
 	
 	public int getZcoord() {
-		return zcoord;
+		return z;
 	}
 
 	public void setZcoord(int zcoord) {
-		this.zcoord = zcoord;
+		this.z = zcoord;
 	}
 	
 	public double getDistance(City otherCity) {
-		double distance = Math.sqrt( (Math.pow(xcoord - otherCity.getXcoord(), 2.0)) + (Math.pow(ycoord - otherCity.getYcoord(), 2.0)) + (Math.pow(zcoord - otherCity.getZcoord(), 2.0))  );
 		
+		double xdiff2 = Math.pow(x - otherCity.getXcoord(), 2.0);
+		double ydiff2 = Math.pow(y - otherCity.getYcoord(), 2.0);
+		double zdiff2 = Math.pow(z - otherCity.getZcoord(), 2.0);
+		double distance = Math.sqrt( xdiff2 + ydiff2 + zdiff2  );
+		
+//		if(DEBUG) {
+//			System.out.println("getting distance between " + this.toString() + " and " + otherCity.toString());
+//			System.out.printf("xdiff = %f, ydiff2 = %f, zdiff2 = %f\n", xdiff2, ydiff2, zdiff2);
+//			System.out.println("distance = " + distance);
+//		}
 		return distance;
 	}
 	
+	public City clone() {
+		City c = new City();
+		c.id = this.id;
+		c.x = this.x;
+		c.y = this.y;
+		c.z = this.z;
+		
+		return c;
+		
+	}
+	
+	public String toString() {
+		return String.format("%d: (%d, %d, %d) ", this.id, this.x, this.y, this.z);
+	}
 
 	@Override
 	public int compareTo(Object o) {
 		City c = (City) o;
-		if(this.xcoord > c.xcoord) {
+		if(this.x > c.x) {
 			return 1;
 		}
-		else if (this.xcoord < c.xcoord) {
+		else if (this.x < c.x) {
 			return -1;
 		}
 		else {
