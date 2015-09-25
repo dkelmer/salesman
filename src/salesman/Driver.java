@@ -3,6 +3,7 @@ package salesman;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Driver {
@@ -11,8 +12,10 @@ public class Driver {
 	
 	public static void main (String[] args) {
 		
-		String filename = "data/travelingtest.txt";
+		String filename = "data/short.txt";
 		Route route = createRoute(filename, DEBUG);
+		ArrayList<City> cities = route.cities;
+				
 		double initDist = route.totalDistance;
 		if(DEBUG) {
 			System.out.println("INITIAL ROUTE DISTANCE:");
@@ -24,7 +27,18 @@ public class Driver {
 		//best.printRoute();
 		System.out.println(best.totalDistance);
 		System.out.println("init dist = " + initDist);
+	
+
 		
+//STARTING HERE IS STUFF REGARDING MST. YOU CAN IGNORE		
+		Graph g = new Graph(cities);
+		double[][] adjacency_matrix = g.adjacencyMatrix;
+		
+		Prims prims = new Prims(adjacency_matrix.length);
+        prims.primsAlgorithm(adjacency_matrix);
+        prims.printMST();
+		
+	
 		
 	}
 	
