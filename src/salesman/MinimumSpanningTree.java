@@ -1,5 +1,6 @@
 package salesman;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /*
@@ -7,6 +8,7 @@ import java.util.Arrays;
  * @author Darko Aleksic
  */
 class MinimumSpanningTree {
+	
 	/**
 	 * Thanks goes to Gilbert Lee. Page 26 of 47 Compiled for the 2012 GNYR NYU
 	 * ICPC Team Codebook
@@ -15,12 +17,13 @@ class MinimumSpanningTree {
 	 *
 	 * NOTE: Needs class Edge below
 	 */
+	static boolean DEBUG = false;
 	Edge[] edges, tree;
 	int[] sets;
 	int n, m;
 
-	private int MST() {
-		int w = 0;
+	private double MST() {
+		double w = 0;
 		int cnt = 0;
 		for (int i = 0; i < m; i++) {
 			int s1 = find(edges[i].u);
@@ -49,49 +52,61 @@ class MinimumSpanningTree {
 			return index;
 		return sets[index] = find(sets[index]);
 	}
-
-	/* Minimum Spanning Tree example - UVa LA 2515 */
-	void mstExample() {
-		n = 3; // number of nodes
-		m = 7; // number of edges
-		int[][] input = { { 1, 2, 19 }, { 2, 3, 11 }, { 3, 1, 7 }, { 1, 3, 5 },
-				{ 2, 3, 89 }, { 3, 1, 91 }, { 1, 2, 32 } };
+	
+	double processRoute(Route r) {
+		ArrayList<City> cities = r.cities;
+		int N = cities.size();
+		n = N;
+		m = N*N;
+		edges = new Edge[m];
 		sets = new int[n];
 		for (int i = 0; i < n; i++) {
 			sets[i] = i;
 		}
-		edges = new Edge[m];
-
-		for (int i = 0; i < m; i++) {
-			int u = input[i][0] - 1; // 0-based!
-			int v = input[i][1] - 1; // 0-based!
-			int w = input[i][2];
-			edges[i] = new Edge(u, v, w);
+		tree = new Edge[n-1];
+		int edgeCount = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				City a = cities.get(i);
+				City b = cities.get(j);
+				int u = a.id-1; //0 based.
+				int v = b.id-1; //0 based.
+				double w = a.getDistance(b);
+				edges[edgeCount++] = new Edge(u, v, w);
+			}
 		}
-		Arrays.sort(edges, 0, m);
-		tree = new Edge[n - 1];
-		System.out.println("MST length: " + MST());
+		Arrays.sort(edges);
+		double mstWeight = MST();
+		if (DEBUG) {
+			System.out.println("MST length: " + mstWeight);
+			System.out.println("TSM upper bound: " + mstWeight*2);
+		}
+
+		//uncommment to print out MST path.
+		/*
 		for (int i = 0; i < n - 1; i++)
-			System.out.println((tree[i].u + 1) + "-" + (tree[i].v + 1) + " "
-					+ tree[i].w);
+			System.out.println((tree[i].u + 1) + "-" + (tree[i].v + 1) + " " + tree[i].w);
+		*/
+		return 2*mstWeight;
 	}
 
-	public static void main(String args[]) {
-		MinimumSpanningTree mst = new MinimumSpanningTree();
-		mst.mstExample();
-	}
+//	public static void main(String args[]) {
+//		MinimumSpanningTree mst = new MinimumSpanningTree();
+//		mst.mstExample();
+//	}
 }
 
 class Edge implements Comparable<Edge> {
-	public int u, v, w;
+	public int u, v;
+	public double w;
 
-	public Edge(int u, int v, int w) {
+	public Edge(int u, int v, double w) {
 		this.u = u;
 		this.v = v;
 		this.w = w;
 	}
 
 	public int compareTo(Edge e2) {
-		return w - e2.w;
+		return (int)(w - e2.w);
 	}
 }

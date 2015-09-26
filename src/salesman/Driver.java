@@ -8,11 +8,11 @@ import java.util.StringTokenizer;
 
 public class Driver {
 	
-	static boolean DEBUG = true; //0 = not debug, 1 = minimal debug, 2 = more debug
+	static boolean DEBUG = false; //0 = not debug, 1 = minimal debug, 2 = more debug
 	
 	public static void main (String[] args) {
 		
-		String filename = "data/short.txt";
+		String filename = "data/travelingtest.txt";
 		Route route = createRoute(filename, DEBUG);
 		ArrayList<City> cities = route.cities;
 				
@@ -28,15 +28,19 @@ public class Driver {
 		System.out.println(best.totalDistance);
 		System.out.println("init dist = " + initDist);
 	
+		
+		//shows bound
+		MinimumSpanningTree mst = new MinimumSpanningTree();
+		System.out.println("Bound from MST:" + mst.processRoute(route));
 
 		
 //STARTING HERE IS STUFF REGARDING MST. YOU CAN IGNORE		
-		Graph g = new Graph(cities);
-		double[][] adjacency_matrix = g.adjacencyMatrix;
-		
-		Prims prims = new Prims(adjacency_matrix.length);
-        prims.primsAlgorithm(adjacency_matrix);
-        prims.printMST();
+//		Graph g = new Graph(cities);
+//		double[][] adjacency_matrix = g.adjacencyMatrix;
+//		
+//		Prims prims = new Prims(adjacency_matrix.length);
+//        prims.primsAlgorithm(adjacency_matrix);
+//        prims.printMST();
 		
 	
 		
