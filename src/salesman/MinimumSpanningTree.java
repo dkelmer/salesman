@@ -2,6 +2,7 @@ package salesman;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 /*
  * Minimum spanning tree
@@ -17,10 +18,11 @@ class MinimumSpanningTree {
 	 *
 	 * NOTE: Needs class Edge below
 	 */
-	static boolean DEBUG = false;
+	static boolean DEBUG = true;
 	Edge[] edges, tree;
 	int[] sets;
 	int n, m;
+	ArrayList<City> tsmPath = new ArrayList<City>();
 
 	private double MST() {
 		double w = 0;
@@ -88,6 +90,34 @@ class MinimumSpanningTree {
 			System.out.println((tree[i].u + 1) + "-" + (tree[i].v + 1) + " " + tree[i].w);
 		*/
 		return 2*mstWeight;
+	}
+	
+	ArrayList<Integer> path() {
+		boolean[] visited = new boolean[n];
+		ArrayList<ArrayList<Edge>> adjList = new ArrayList<ArrayList<Edge>>();
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		for (int i = 0; i < n; i++) adjList.add(new ArrayList<Edge>());
+		
+		for (int i = 0; i < n - 1; i++) {
+			int u = tree[i].u;
+			int v = tree[i].v;
+			adjList.get(u).add(tree[i]);
+			adjList.get(v).add(tree[i]);
+		}		
+		dfs(visited, adjList, path, 0);
+		return path;
+	}
+	
+	//gets preorder path.
+	void dfs(boolean[] visited, ArrayList<ArrayList<Edge>> adjList, ArrayList<Integer> path, int curr) {
+		visited[curr] = true;
+		path.add(curr);
+		ArrayList<Edge> neighbors = adjList.get(curr);
+		for (Edge e : neighbors) {
+			int dest = (e.u == curr)? e.v : e.u; //get the other end of the edge.
+			if (!visited[dest])
+				dfs(visited, adjList, path, dest);
+		}
 	}
 
 //	public static void main(String args[]) {

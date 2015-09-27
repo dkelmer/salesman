@@ -14,8 +14,17 @@ public class Driver {
 		
 		String filename = "data/travelingtest.txt";
 		Route route = createRoute(filename, DEBUG);
-		ArrayList<City> cities = route.cities;
-				
+		ArrayList<City> cities = route.cities;		
+		
+		
+		//shows bound
+		MinimumSpanningTree mst = new MinimumSpanningTree();
+		mst.processRoute(route);
+		ArrayList<Integer> mstOrder = mst.path();
+		ArrayList<City> initialCities = rearrange(cities, mstOrder);
+		route.cities = initialCities;
+		route.calculateTotalPathLength();
+		
 		double initDist = route.totalDistance;
 		if(DEBUG) {
 			System.out.println("INITIAL ROUTE DISTANCE:");
@@ -25,14 +34,11 @@ public class Driver {
 		Route best = anneal(route);
 		
 		//best.printRoute();
-		System.out.println(best.totalDistance);
 		System.out.println("init dist = " + initDist);
+		System.out.println(best.totalDistance);
 	
 		
-		//shows bound
-		MinimumSpanningTree mst = new MinimumSpanningTree();
-		System.out.println("Bound from MST:" + mst.processRoute(route));
-
+		
 		
 //STARTING HERE IS STUFF REGARDING MST. YOU CAN IGNORE		
 //		Graph g = new Graph(cities);
@@ -46,11 +52,17 @@ public class Driver {
 		
 	}
 	
+	static ArrayList<City> rearrange(ArrayList<City> original, ArrayList<Integer> order) {
+		ArrayList<City> result = new ArrayList<City>();
+		for (Integer idx : order) result.add(original.get(idx).clone());
+		return result;
+	}
+	
 	static Route anneal(Route currRoute) {
 		Route bestRoute = new Route(currRoute);
 		Route newRoute = null;
 		
-		int temp = 1000000;
+		int temp = 10000000;
 		double coolingRate = .00002;
 		
 		// Loop until system has cooled
