@@ -50,7 +50,7 @@ public class Route {
 		Random random = new Random();
 		int city1idx = random.nextInt(cities.size());
 		int city2idx = city1idx;
-		int range = random.nextInt(30);
+		int range = random.nextInt(20);
 /*
 		while(city2idx == city1idx) {
 			city2idx = random.nextInt(cities.size());
@@ -68,6 +68,7 @@ public class Route {
 		
 //		swapCities(city1idx, city2idx);
 		reverseRange(city1idx, city2idx);
+//		shuffleRange(city1idx,city2idx);
 		calculateTotalPathLength();
 		
 	}
