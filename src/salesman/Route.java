@@ -50,15 +50,24 @@ public class Route {
 		Random random = new Random();
 		int city1idx = random.nextInt(cities.size());
 		int city2idx = city1idx;
+		int range = random.nextInt(30);
+/*
 		while(city2idx == city1idx) {
 			city2idx = random.nextInt(cities.size());
+		}
+*/
+		city2idx = city1idx + range;
+
+		if((city1idx + range) > cities.size()) {
+			city2idx = cities.size();
 		}
 		
 		if(DEBUG) {
 			System.out.printf("Swapping: (idx1 = %d, idx2 = %d)\n", city1idx, city2idx);
 		}
 		
-		swapCities(city1idx, city2idx);
+//		swapCities(city1idx, city2idx);
+		reverseRange(city1idx, city2idx);
 		calculateTotalPathLength();
 		
 	}
@@ -71,9 +80,33 @@ public class Route {
 		cities.set(city2idx, city1);
 	}
 	
+	public void reverseRange(int city1idx, int city2idx) {
+		ArrayList<City> sublist = new ArrayList<City>(cities.subList(city1idx, city2idx));
+		Collections.reverse(sublist);
+		int i = city1idx;
+		for(City c : sublist) {
+			cities.set(i, c);
+			i++;
+		}
+	}
+	
+	public void shuffleRange(int city1idx, int city2idx) {
+		ArrayList<City> sublist = new ArrayList<City>(cities.subList(city1idx, city2idx));
+		Collections.shuffle(sublist);
+		int i = city1idx;
+		for(City c : sublist) {
+			cities.set(i, c);
+			i++;
+		}
+	}
+	
 	public void printRoute() {
-		for(City c : cities) {
-			System.out.println(c);
+//		for(City c : cities) {
+//			System.out.println(c);
+//		}
+//		
+		for(int i = 0; i < cities.size()-1; i++) {
+			System.out.println(cities.get(i) + " -- " + cities.get(i+1) + ": " + cities.get(i).getDistance(cities.get(i+1)));
 		}
 		System.out.println("total distance = " + totalDistance);
 		

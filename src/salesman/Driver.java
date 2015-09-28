@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 public class Driver {
 	
-	static boolean DEBUG = false; //0 = not debug, 1 = minimal debug, 2 = more debug
+	static boolean DEBUG = true; //0 = not debug, 1 = minimal debug, 2 = more debug
 	
 	public static void main (String[] args) {
 		
@@ -23,13 +23,14 @@ public class Driver {
 		ArrayList<Integer> mstOrder = mst.path();
 		ArrayList<City> initialCities = rearrange(cities, mstOrder);
 		route.cities = initialCities;
+		
 		route.calculateTotalPathLength();
 		
 		double initDist = route.totalDistance;
 		if(DEBUG) {
 			System.out.println("INITIAL ROUTE DISTANCE:");
-			//route.printRoute();
 			System.out.println(route.totalDistance);
+			route.printRoute();
 		}
 		Route best = anneal(route);
 		
@@ -38,23 +39,13 @@ public class Driver {
 		System.out.println(best.totalDistance);
 	
 		
-		
-		
-//STARTING HERE IS STUFF REGARDING MST. YOU CAN IGNORE		
-//		Graph g = new Graph(cities);
-//		double[][] adjacency_matrix = g.adjacencyMatrix;
-//		
-//		Prims prims = new Prims(adjacency_matrix.length);
-//        prims.primsAlgorithm(adjacency_matrix);
-//        prims.printMST();
-		
-	
-		
 	}
 	
 	static ArrayList<City> rearrange(ArrayList<City> original, ArrayList<Integer> order) {
 		ArrayList<City> result = new ArrayList<City>();
-		for (Integer idx : order) result.add(original.get(idx).clone());
+		for (Integer idx : order) {
+			result.add(original.get(idx).clone());
+		}
 		return result;
 	}
 	
@@ -62,11 +53,12 @@ public class Driver {
 		Route bestRoute = new Route(currRoute);
 		Route newRoute = null;
 		
-		int temp = 10000000;
+		//int temp = 100000;
+		double temp = .3;
 		double coolingRate = .00002;
 		
 		// Loop until system has cooled
-		while (temp > 1) {
+		while (temp > .0001) {
 
 			// Create new neighbor
 			newRoute = new Route(currRoute);
@@ -83,8 +75,20 @@ public class Driver {
 			}
 
 			// Decide if we should accept the neighbor
-			if (acceptanceProbability(currentEnergy, newEnergy, temp) > Math.random()) {
+			double prob = acceptanceProbability(currentEnergy, newEnergy, temp);
+			double rand = Math.random();
+			boolean selected = false;
+			if (prob > rand) {
 				currRoute = newRoute;
+				selected = true;
+			}
+			
+			if(DEBUG) {
+				System.out.println("current energy: " + currentEnergy);
+				System.out.println("new energy: " + newEnergy);
+				System.out.println("acceptance prob: " + prob);
+				System.out.println("randon num: " + rand);
+				System.out.println("switched? " + selected);
 			}
 
 			// Cool system

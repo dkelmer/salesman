@@ -119,11 +119,6 @@ class MinimumSpanningTree {
 				dfs(visited, adjList, path, dest);
 		}
 	}
-
-//	public static void main(String args[]) {
-//		MinimumSpanningTree mst = new MinimumSpanningTree();
-//		mst.mstExample();
-//	}
 }
 
 class Edge implements Comparable<Edge> {
