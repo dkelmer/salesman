@@ -8,14 +8,13 @@ import java.util.StringTokenizer;
 
 public class Driver {
 	
-	static boolean DEBUG = true; //0 = not debug, 1 = minimal debug, 2 = more debug
+	static boolean DEBUG = false; //0 = not debug, 1 = minimal debug, 2 = more debug
 	
 	public static void main (String[] args) {
 		
-		String filename = "data/travelingtest.txt";
+		String filename = "../data/travelingtest.txt";
 		Route route = createRoute(filename, DEBUG);
 		ArrayList<City> cities = route.cities;		
-		
 		
 		//shows bound
 		MinimumSpanningTree mst = new MinimumSpanningTree();
@@ -34,11 +33,12 @@ public class Driver {
 		}
 		Route best = anneal(route);
 		
-		//best.printRoute();
-		System.out.println("init dist = " + initDist);
-		System.out.println(best.totalDistance);
-	
-		
+		if (DEBUG) {
+			//best.printRoute();
+			System.out.println("init dist = " + initDist);
+			System.out.println(best.totalDistance);
+		}
+		best.printSolution();
 	}
 	
 	static ArrayList<City> rearrange(ArrayList<City> original, ArrayList<Integer> order) {

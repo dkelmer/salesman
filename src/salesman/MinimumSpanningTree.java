@@ -18,7 +18,7 @@ class MinimumSpanningTree {
 	 *
 	 * NOTE: Needs class Edge below
 	 */
-	static boolean DEBUG = true;
+	static boolean DEBUG = false;
 	Edge[] edges, tree;
 	int[] sets;
 	int n, m;
